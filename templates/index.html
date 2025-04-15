@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Partial Derivative Calculator</title>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em auto;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.6em;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        button {
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .copy-btn {
+            display: block;
+            margin: 0.5em auto 1.5em;
+            background-color: #007bff;
+        }
+
+        .history {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 1em;
+            margin-top: 2em;
+        }
+    </style>
+    <h1>Partial Derivative Calculator</h1>
+
+    <form method="post">
+        <label>Symbol funkcji (LaTeX, np. f, \phi, \sigma_{xy}):</label>
+        <input type="text" name="func_name" placeholder="e.g. f or \phi" value="{{ request.form.func_name or 'f' }}">
+
+        <label>Funkcja w LaTeXie:</label>
+        <textarea name="latex_expr" rows="2"
+            placeholder="e.g. \ln\left(\frac{r k}{r l}\right)/\ln\left(\frac{k - R}{r - R}\right)">{{ request.form.latex_expr or '' }}</textarea>
+
+        <label>Zmienne (po przecinku):</label>
+        <input type="text" name="variables" placeholder="e.g. r,k,l,R" value="{{ request.form.variables or '' }}">
+
+        <button type="submit">Policz</button>
+    </form>
+
+    {% if result %}
+    {% if result.error %}
+    <p class="error">Error: {{ result.error }}</p>
+    {% else %}
+    <h2>Funkcja:</h2>
+    <p>$$ {{ result.func_name }} = {{ result.original }} $$</p>
+
+    <h2>Pochodne Cząstkowe:</h2>
+    <ul>
+        {% for var, deriv in result.partials.items() %}
+        <li>
+            <p>$$ \frac{\partial {{ result.func_name }}}{\partial {{ var }}} = {{ deriv }} $$</p>
+            <button class="copy-btn"
+                onclick="copyToClipboard('{{ deriv | replace('\n', '') | replace('\\', '\\\\') }}')">
+                Skopiuj LaTeX do schowka
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Niepewność:</h2>
+    <p>$$ \Delta {{ result.func_name }} = {{ result.uncertainty_expr }} $$</p>
+    <button class="copy-btn"
+        onclick="copyToClipboard('{{ result.uncertainty_expr | replace('\n', '') | replace('\\', '\\\\') }}')">Copy
+        Uncertainty LaTeX</button>
+
+    {% if result.export_latex %}
+    <h2>Cały LaTeX</h2>
+    <textarea rows="8" style="width: 100%; font-family: 'Courier New', monospace;">{{ result.export_latex }}</textarea>
+    {% endif %}
+
+    {% if history %}
+    <div class="history">
+        <h2>Previous Results</h2>
+        <ul>
+            {% for item in history %}
+            <li>
+                <pre>{{ item }}</pre>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+
+    <script>
+        function copyToClipboard(text) {
+            const temp = document.createElement("textarea");
+            temp.value = `$${text}$`;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+            alert("Skopiowano!");
+        }
+    </script>
+</body>
+
+</html>
