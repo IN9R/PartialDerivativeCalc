@@ -107,8 +107,7 @@
     <h2>Niepewność:</h2>
     <p>$$ \Delta {{ result.func_name }} = {{ result.uncertainty_expr }} $$</p>
     <button class="copy-btn"
-        onclick="copyToClipboard('{{ result.uncertainty_expr | replace('\n', '') | replace('\\', '\\\\') }}')">Copy
-        Uncertainty LaTeX</button>
+        onclick="copyToClipboard('{{ result.uncertainty_expr | replace('\n', '') | replace('\\', '\\\\') }}')">Skopiuj LaTeX do schowka</button>
 
     {% if result.export_latex %}
     <h2>Cały LaTeX</h2>
