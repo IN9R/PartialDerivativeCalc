@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Partial Derivative Calculator</title>
+    <title>Kalkulator Pochodnych Cząstkowych</title>
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -68,18 +68,18 @@
             margin-top: 2em;
         }
     </style>
-    <h1>Partial Derivative Calculator</h1>
+    <h1>Pracownia Fizyczna go nienawidzi [ZOBACZ JAK]</h1>
 
     <form method="post">
-        <label>Symbol funkcji (LaTeX, np. f, \phi, \sigma_{xy}):</label>
-        <input type="text" name="func_name" placeholder="e.g. f or \phi" value="{{ request.form.func_name or 'f' }}">
+        <label>Symbol funkcji:</label>
+        <input type="text" name="func_name" placeholder="np. f or \phi" value="{{ request.form.func_name or 'f' }}">
 
         <label>Funkcja w LaTeXie:</label>
         <textarea name="latex_expr" rows="2"
-            placeholder="e.g. \ln\left(\frac{r k}{r l}\right)/\ln\left(\frac{k - R}{r - R}\right)">{{ request.form.latex_expr or '' }}</textarea>
+            placeholder="np. \frac{x}{y}">{{ request.form.latex_expr or '' }}</textarea>
 
         <label>Zmienne (po przecinku):</label>
-        <input type="text" name="variables" placeholder="e.g. r,k,l,R" value="{{ request.form.variables or '' }}">
+        <input type="text" name="variables" placeholder="np. \lambda,\phi,\rho_c" value="{{ request.form.variables or '' }}">
 
         <button type="submit">Policz</button>
     </form>
