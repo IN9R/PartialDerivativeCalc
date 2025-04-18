@@ -1,9 +1,16 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from sympy import symbols, diff, latex
 from latex2sympy2 import latex2sympy
 import os
 
 app = Flask(__name__)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.png', mimetype='image/png'
+    )
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
